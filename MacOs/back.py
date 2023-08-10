@@ -39,7 +39,7 @@ def convert_to_excel(dat_file_path):
             # Write the DataFrame to the Excel file
             df.to_excel(output_excel_file_path, index=False)
 
-            return f"{os.path.dirname(dat_file_path)}"+f"\{os.path.splitext(os.path.basename(dat_file_path))[0]}.xlsx"
+            return f"{os.path.dirname(dat_file_path)}"+f"/{os.path.splitext(os.path.basename(dat_file_path))[0]}.xlsx"
         else:
             return "Invalid file path or file extension. Please select a valid .dat file."
     except Exception as e:
