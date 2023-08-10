@@ -1,4 +1,4 @@
-import MacOs.back as back
+import back
 import flet
 from flet import (
     ElevatedButton,
@@ -19,14 +19,15 @@ def main(page: Page):
 
     # Save file dialog
     def save_file_result(e: FilePickerResultEvent):
-        if e.path:
-            save_file_path.value = back.convert_to_excel(e.path)
-            if save_file_path.value != "Invalid file path or file extension. Please select a valid .dat file.":
-                open_excel_dialog.disabled = False
+        for file in e.files:
+            if file.path:
+                save_file_path.value = back.convert_to_excel(file.path)
+                if save_file_path.value != "Invalid file path or file extension. Please select a valid .dat file.":
+                    open_excel_dialog.disabled = False
+                else:
+                    open_excel_dialog.disabled = True
             else:
-                open_excel_dialog.disabled = True
-        else:
-            save_file_path.value = ""
+                save_file_path.value = ""
 
         save_file_path.update()
         open_excel_path.update()
@@ -54,7 +55,8 @@ def main(page: Page):
                 ElevatedButton(
                     "Select file",
                     icon=icons.FILE_COPY,
-                    on_click=lambda _: save_file_dialog.save_file(),
+                    on_click=lambda _: [
+                        save_file_dialog.pick_files()],
                     disabled=page.web,
                 ),
 
