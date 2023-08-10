@@ -49,8 +49,7 @@ def convert_to_excel(dat_file_path):
 def open_excel_file(excel_file_path):
     if os.path.exists(excel_file_path):
         try:
-            command = ['open' if platform.system(
-            ) == 'Darwin' else 'start', excel_file_path]
+            command = f'start "" "{excel_file_path}"'
             subprocess.Popen(command, shell=True)
         except Exception as e:
             return f"An error occurred while opening the file: {e}"
