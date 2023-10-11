@@ -19,6 +19,8 @@ def main(page: Page):
 
     # Save file dialog
     def save_file_result(e: FilePickerResultEvent):
+        save_file_path.value = ""
+        open_excel_dialog.disabled = True
         for file in e.files:
             if file.path:
                 save_file_path.value = back.convert_to_excel(file.path)
@@ -38,9 +40,10 @@ def main(page: Page):
 
     def open_excel_file(e):
         open_excel_path.value = back.open_excel_file(save_file_path.value)
-        save_file_path.value = ""
+        open_excel_dialog.disabled = True
         save_file_path.update()
         open_excel_path.update()
+        open_excel_dialog.update()
 
     open_excel_dialog = ElevatedButton(
         "Open file", icon=flet.icons.UPLOAD_FILE, on_click=open_excel_file, disabled=True)

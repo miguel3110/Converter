@@ -8,13 +8,15 @@ import pandas as pd
 def convert_to_excel(dat_file_path):
     try:
         if os.path.exists(dat_file_path) and dat_file_path.lower().endswith(".dat"):
-            with open(dat_file_path, 'r', encoding='utf-8') as file:
+            with open(dat_file_path, 'r', encoding='utf-8', errors='ignore') as file:
                 content = file.read()
-
+            clean_content = content
             # Remove the weird characters
-            clean_content = re.sub(r'þ', '', content)
+            if (clean_content[0] == '�'):
+                clean_content = re.sub(r'�', '', clean_content)
+            elif (clean_content[0] == 'þ'):
+                clean_content = re.sub(r'þ', '', clean_content)
             clean_content = re.sub(r'[^\x0A\x20-\x7E]', ',', clean_content)
-
             # Split the cleaned content into lines based on newline character (x0A)
             lines = clean_content.split('\n')
 
@@ -29,6 +31,9 @@ def convert_to_excel(dat_file_path):
 
             # Create a DataFrame from the data with the extracted header as the column names
             df = pd.DataFrame(data, columns=header.split(','))
+
+            # Drop completely empty columns
+            df = df.dropna(axis=1, how='all')
 
             # so here we are creating the variable that will tell tell the df
             # the name o of the output file and the directory where it will be saved
@@ -55,27 +60,3 @@ def open_excel_file(excel_file_path):
             return f"An error occurred while opening the file: {e}"
     else:
         return "Invalid file path or file extension. Please select a valid .dat file."
-
-
-'''
-if __name__ == "__main__":
-    while True:
-        # Prompt the user to enter the path of the .dat file
-        dat_file_path = input("Enter the path of the .dat file: ")
-
-        # Validate if the file exists and if it has a .dat extension
-        if os.path.exists(dat_file_path) and dat_file_path.lower().endswith(".dat"):
-            convert_to_excel(dat_file_path)
-        else:
-            print(
-                "Invalid file path or file extension. Please provide a valid .dat file.")
-            continue
-
-        # Ask if the user wants to convert another file
-        answer = input(
-            "Do you want to convert another file? (Enter 'yes' to continue or anything else to end): ").lower()
-        if answer != 'yes':
-            break
-
-    print("Thank you for using the converter. Goodbye!")
-'''
